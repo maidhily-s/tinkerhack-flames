@@ -92,9 +92,7 @@ The system takes user inputs including DOB, personality, and uploaded image. Zod
 *This video shows how the app works and how the result are shown*
 ---
 
-## AI Tools Used (Optional - For Transparency Bonus)
-
-If you used AI tools during development, document them here for transparency:
+## AI Tools Used
 
 **Tool Used:** ChatGPT
 
