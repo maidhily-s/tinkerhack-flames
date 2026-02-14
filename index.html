@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAMES Matchmaker 💅</title>
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  margin:0;
+  background: linear-gradient(135deg,#ff5edf,#04c8de);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.container {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  padding:25px;
+  border-radius:30px;
+  width:95%;
+  max-width:900px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+h2 { text-align:center; color:white; font-size:32px; }
+.columns { display:flex; gap:20px; flex-wrap:wrap; }
+.card {
+  flex:1;
+  min-width:250px;
+  background: rgba(255,255,255,0.25);
+  padding:15px;
+  border-radius:20px;
+}
+input, select {
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:15px;
+  border:none;
+}
+small { color:white; font-size:12px; }
+.zodiac { color:white; font-size:14px; }
+.button-row { display:flex; gap:10px; }
+button {
+  background: linear-gradient(45deg,#ff0080,#7928ca);
+  color:white;
+  padding:14px;
+  border:none;
+  border-radius:15px;
+  width:100%;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:15px;
+}
+.reset-btn { background: linear-gradient(45deg,#6c757d,#adb5bd); }
+.spinner {
+  text-align:center;
+  font-size:30px;
+  animation: spin 1s linear infinite;
+  display:none;
+}
+@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+.chatbox {
+  margin-top:15px;
+  background: rgba(255,255,255,0.3);
+  padding:15px;
+  border-radius:15px;
+  display:none;
+}
+.msg { margin:8px 0; padding:10px; border-radius:10px; background:white; }
+.progress { height:25px; background:rgba(255,255,255,0.3); border-radius:15px; overflow:hidden; margin-top:10px; }
+.progress-bar { height:100%; background: linear-gradient(90deg,#ff0080,#ff8c00); width:0%; text-align:center; color:white; font-weight:bold; }
+img { width:100%; border-radius:15px; margin-top:5px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>🔥 FLAMES but make it chaotic 💘</h2>
+<div class="columns">
+
+<div class="card">
+<h3>😎 You</h3>
+<input id="name1" placeholder="Main Character Name">
+<input type="date" id="dob1" placeholder="📅 Enter Date of Birth" onchange="showZodiac('dob1','z1')">
+<div class="zodiac" id="z1">Zodiac: --</div>
+<select id="personality1">
+<option value="chill">Chill 😌</option>
+<option value="dramatic">Drama Core 🎭</option>
+<option value="introvert">Lowkey 👀</option>
+<option value="extrovert">Loud & Proud 🔊</option>
+</select>
+<small>📸 Upload OR Take Selfie</small>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img1')">
+<img id="img1" />
+</div>
+
+<div class="card">
+<h3>💀 The Other Person</h3>
+<input id="name2" placeholder="Potential Red Flag">
+<input type="date" id="dob2" placeholder="📅 Enter Date of Birth" onchange="showZodiac('dob2','z2')">
+<small>📅 Enter Date of Birth</small>
+<div class="zodiac" id="z2">Zodiac: --</div>
+<select id="personality2">
+<option value="chill">Chill 😌</option>
+<option value="dramatic">Drama Core 🎭</option>
+<option value="introvert">Lowkey 👀</option>
+<option value="extrovert">Loud & Proud 🔊</option>
+</select>
+<small>📸 Upload OR Take Photo</small>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img2')">
+<img id="img2" />
+</div>
+
+</div>
+<div class="button-row">
+<button onclick="startReveal()">✨ Spill the Tea</button>
+<button class="reset-btn" onclick="resetApp()">🧹 Clean Slate</button>
+</div>
+
+<div class="spinner" id="spinner">💘</div>
+<div class="chatbox" id="chatbox"></div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+</div>
+
+<script>
+function previewImage(event,id){
+ let reader=new FileReader();
+ reader.onload=function(){ document.getElementById(id).src=reader.result; }
+ reader.readAsDataURL(event.target.files[0]);
+}
+
+function getZodiac(dateString){
+ let d=new Date(dateString);
+ let day=d.getDate(), m=d.getMonth()+1;
+ if((m==3&&day>=21)||(m==4&&day<=19)) return 'Aries';
+ if((m==4&&day>=20)||(m==5&&day<=20)) return 'Taurus';
+ if((m==5&&day>=21)||(m==6&&day<=20)) return 'Gemini';
+ if((m==6&&day>=21)||(m==7&&day<=22)) return 'Cancer';
+ if((m==7&&day>=23)||(m==8&&day<=22)) return 'Leo';
+ if((m==8&&day>=23)||(m==9&&day<=22)) return 'Virgo';
+ if((m==9&&day>=23)||(m==10&&day<=22)) return 'Libra';
+ if((m==10&&day>=23)||(m==11&&day<=21)) return 'Scorpio';
+ if((m==11&&day>=22)||(m==12&&day<=21)) return 'Sagittarius';
+ if((m==12&&day>=22)||(m==1&&day<=19)) return 'Capricorn';
+ if((m==1&&day>=20)||(m==2&&day<=18)) return 'Aquarius';
+ return 'Pisces';
+}
+
+function showZodiac(dobId, displayId){
+ let dob=document.getElementById(dobId).value;
+ if(!dob) return;
+ document.getElementById(displayId).innerText="Zodiac: "+getZodiac(dob);
+}
+
+function zodiacScore(z1,z2){
+ const matrix = {
+ Aries:{Aries:75,Taurus:60,Gemini:85,Cancer:55,Leo:85,Virgo:58,Libra:80,Scorpio:60,Sagittarius:90,Capricorn:65,Aquarius:78,Pisces:50},
+ Taurus:{Aries:60,Taurus:80,Gemini:65,Cancer:85,Leo:70,Virgo:92,Libra:75,Scorpio:88,Sagittarius:52,Capricorn:89,Aquarius:68,Pisces:90},
+ Gemini:{Aries:85,Taurus:65,Gemini:78,Cancer:60,Leo:88,Virgo:58,Libra:93,Scorpio:62,Sagittarius:86,Capricorn:70,Aquarius:90,Pisces:68},
+ Cancer:{Aries:55,Taurus:85,Gemini:60,Cancer:82,Leo:65,Virgo:88,Libra:70,Scorpio:94,Sagittarius:58,Capricorn:86,Aquarius:57,Pisces:96},
+ Leo:{Aries:85,Taurus:70,Gemini:88,Cancer:65,Leo:80,Virgo:60,Libra:89,Scorpio:60,Sagittarius:88,Capricorn:72,Aquarius:84,Pisces:68},
+ Virgo:{Aries:58,Taurus:92,Gemini:58,Cancer:88,Leo:60,Virgo:85,Libra:78,Scorpio:86,Sagittarius:65,Capricorn:95,Aquarius:72,Pisces:90},
+ Libra:{Aries:80,Taurus:75,Gemini:93,Cancer:70,Leo:89,Virgo:78,Libra:82,Scorpio:68,Sagittarius:84,Capricorn:70,Aquarius:95,Pisces:72},
+ Scorpio:{Aries:60,Taurus:88,Gemini:62,Cancer:94,Leo:60,Virgo:86,Libra:68,Scorpio:84,Sagittarius:70,Capricorn:82,Aquarius:65,Pisces:97},
+ Sagittarius:{Aries:90,Taurus:52,Gemini:86,Cancer:58,Leo:88,Virgo:65,Libra:84,Scorpio:70,Sagittarius:78,Capricorn:68,Aquarius:90,Pisces:75},
+ Capricorn:{Aries:65,Taurus:89,Gemini:70,Cancer:86,Leo:72,Virgo:95,Libra:70,Scorpio:82,Sagittarius:68,Capricorn:80,Aquarius:75,Pisces:88},
+ Aquarius:{Aries:78,Taurus:68,Gemini:90,Cancer:57,Leo:84,Virgo:72,Libra:95,Scorpio:65,Sagittarius:90,Capricorn:75,Aquarius:82,Pisces:80},
+ Pisces:{Aries:50,Taurus:90,Gemini:68,Cancer:96,Leo:68,Virgo:90,Libra:72,Scorpio:97,Sagittarius:75,Capricorn:88,Aquarius:80,Pisces:85}
+ };
+ return matrix[z1][z2] * 0.2;
+}
+
+function dobDifferenceScore(d1,d2){
+ let ageGap=Math.abs(new Date(d1)-new Date(d2))/(1000*60*60*24*365);
+ if(ageGap<2) return 30;
+ if(ageGap<5) return 20;
+ if(ageGap<8) return 10;
+ return 0;
+}
+
+function personalityScore(p1,p2){
+ if(p1===p2) return 25;
+ if((p1==='introvert'&&p2==='extrovert')||(p1==='extrovert'&&p2==='introvert')) return 20;
+ if(p1==='dramatic'&&p2==='dramatic') return -15;
+ return 10;
+}
+
+function photoVibeScore(img){ if(!img.src) return 5; return (img.src.length%25); }
+
+function startReveal(){ spinner.style.display="block"; chatbox.style.display="none"; setTimeout(calculateCompatibility,2000); }
+
+function roastZodiac(z){
+ const roasts={
+ Aries:"Main character syndrome detected 🚨",
+ Taurus:"Will fight for food before love 🍕",
+ Gemini:"Multiple personalities loading...",
+ Cancer:"Emotional damage expert 😭",
+ Leo:"Needs attention like oxygen ✨",
+ Virgo:"Will correct your grammar mid breakup 📚",
+ Libra:"Cannot decide between love & chaos ⚖️",
+ Scorpio:"Secret FBI energy 🕵️",
+ Sagittarius:"Commitment allergic 💨",
+ Capricorn:"Treats love like a business deal 📊",
+ Aquarius:"Emotionally buffering...",
+ Pisces:"Lives in delulu land 🌊"
+ };
+ return roasts[z];
+}
+
+function roastPhoto(img){
+ if(!img.src) return "No photo? Hiding something? 👀";
+ let vibe=img.src.length%3;
+ if(vibe===0) return "Soft aesthetic but will ghost 💀";
+ if(vibe===1) return "Gym mirror energy detected 🪞";
+ return "DP screaming 'situationship survivor' 😭";
+}
+
+function calculateCompatibility(){
+ spinner.style.display="none";
+ let d1=dob1.value, d2=dob2.value;
+ let p1=personality1.value, p2=personality2.value;
+ if(!d1||!d2) return alert("Drop the DOB bestie 😭");
+
+ let z1=getZodiac(d1);
+ let z2=getZodiac(d2);
+
+ let score=40;
+ score+=dobDifferenceScore(d1,d2);
+ score+=personalityScore(p1,p2);
+ score+=photoVibeScore(img1);
+ score+=photoVibeScore(img2);
+ score+=zodiacScore(z1,z2);
+
+ score=Math.max(5,Math.min(score,100));
+ let situationship=Math.max(10,100-score);
+
+ progressBar.style.width=score+"%";
+ progressBar.innerText=score+"%";
+
+ chatbox.style.display="block";
+ chatbox.innerHTML=`
+ <div class='result-card'>✨ ${z1} + ${z2} Cosmic Chaos</div>
+ <div class='result-card'>💘 Compatibility: ${score}%</div>
+ <div class='result-card'>🚩 Situationship Risk: ${situationship}%</div>
+ 
+ <div class='roast-card'>🔮 ${roastZodiac(z1)}</div>
+ <div class='roast-card'>🔮 ${roastZodiac(z2)}</div>
+ <div class='roast-card'>📸 You: ${roastPhoto(img1)}</div>
+ <div class='roast-card'>📸 Them: ${roastPhoto(img2)}</div>
+ 
+ <div class='warning-card'>${score<40?'🚨 Emotional Damage Incoming':'💅 Might Survive The Talking Stage'}</div>
+`;
+}
+
+function resetApp(){
+ name1.value=""; name2.value="";
+ dob1.value=""; dob2.value="";
+ document.getElementById('z1').innerText="Zodiac: --";
+ document.getElementById('z2').innerText="Zodiac: --";
+ img1.src=""; img2.src="";
+ document.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
+ progressBar.style.width="0%";
+ progressBar.innerText="";
+ chatbox.style.display="none";
+ spinner.style.display="none";
+}
+</script>
+</body>
+</html>

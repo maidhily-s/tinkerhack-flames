@@ -1,0 +1,21 @@
+{
+  "name": "FLAMES Matchmaker",
+  "short_name": "FLAMES",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ff758c",
+  "theme_color": "#ff4d6d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "F.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "F.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
