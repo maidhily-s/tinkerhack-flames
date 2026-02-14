@@ -82,7 +82,7 @@ The system takes user inputs including DOB, personality, and uploaded image. Zod
 
 **Application Workflow:**
 
-![Workflow]((workflow.jpg))
+![Workflow](workflow.jpg)
 *The given workflow explains how the app is working and its working flow*
 
 ## Project Demo
